@@ -1,6 +1,6 @@
 #!/bin/python3
 import sys
-from pyanvil import World, BlockState, Material
+from pyanvileditor import World, BlockState, Material
 
 with World('A', save_location='/home/dallen/.minecraft/saves', debug=True) as wrld:
     cv = wrld.get_canvas()

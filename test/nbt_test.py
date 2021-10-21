@@ -1,7 +1,7 @@
-from pyanvil.nbt import ByteTag, ShortTag, IntTag, LongTag, FloatTag, DoubleTag
-from pyanvil.nbt import ByteArrayTag, StringTag, ListTag, CompoundTag, IntArrayTag, LongArrayTag
-from pyanvil.nbt import parse_nbt
-from pyanvil.stream import OutputStream, InputStream
+from pyanvileditor.nbt import ByteTag, ShortTag, IntTag, LongTag, FloatTag, DoubleTag
+from pyanvileditor.nbt import ByteArrayTag, StringTag, ListTag, CompoundTag, IntArrayTag, LongArrayTag
+from pyanvileditor.nbt import parse_nbt
+from pyanvileditor.stream import OutputStream, InputStream
 
 def build_simple_nbt_tag_test(clz, test_val, test_bin):
     class TestSimpleNBTTag:
@@ -60,7 +60,7 @@ def build_array_nbt_tag_test(clz, test_vals, test_bins):
             assert parsed_tag == expected_tag, f'Tag {clz.clazz_name}'
 
     return TestArrayNBTTag
-        
+
 
 TestByteTag = build_simple_nbt_tag_test(ByteTag, 75, [75])
 TestShortTag = build_simple_nbt_tag_test(ShortTag, 3*10**4, [117, 48])
@@ -107,7 +107,7 @@ class TestListNBTTag:
             list(b'Test') + \
             [5, 0, 0, 0, 2] +\
             [63, 192, 0, 0, 65, 50, 102, 102]
-            
+
         assert binary_tag == expected_tag, 'Tag ListTag with FloatTag elements'
 
     def test_deserializing_simple_data(args):
@@ -138,7 +138,7 @@ class TestListNBTTag:
             [25, 31] +\
             [5, 0, 0, 0, 1] +\
             [63, 192, 0, 0]
-            
+
         assert binary_tag == expected_tag, 'Tag ListTag with ListTag elements'
 
     def test_deserializing_list_data(args):
@@ -171,7 +171,7 @@ class TestListNBTTag:
             [1, 0, 3,] + list(b'dp2') + [31, 0] +\
             [1, 0, 3,] + list(b'dp3') + [25] +\
             [1, 0, 3,] + list(b'dp4') + [31, 0]
-            
+
         assert binary_tag == expected_tag, 'Tag ListTag with ListTag elements'
 
     def test_deserializing_compund_data(args):
@@ -192,7 +192,7 @@ class TestListNBTTag:
 class TestCompoundNBTTag:
     def test_serializing(args):
         tag = CompoundTag(tag_name='Test', children=[
-            ByteTag(25, tag_name='dp1'), 
+            ByteTag(25, tag_name='dp1'),
             FloatTag(1.5, tag_name='dp2'),
             ListTag(ByteTag.clazz_id, tag_name='dp3', children=[
                 ByteTag(35)
@@ -200,7 +200,7 @@ class TestCompoundNBTTag:
             CompoundTag(tag_name='dp4', children=[
                 ByteArrayTag(tag_name='sub_dp', children=[
                     ByteTag(10),
-                    ByteTag(20) 
+                    ByteTag(20)
                 ])
             ])
         ])
@@ -228,7 +228,7 @@ class TestCompoundNBTTag:
             [0]))
         parsed_tag = parse_nbt(raw_tag)
         tag = CompoundTag(tag_name='Test', children=[
-            ByteTag(25, tag_name='dp1'), 
+            ByteTag(25, tag_name='dp1'),
             FloatTag(1.5, tag_name='dp2'),
             ListTag(ByteTag.clazz_id, tag_name='dp3', children=[
                 ByteTag(35)
@@ -236,7 +236,7 @@ class TestCompoundNBTTag:
             CompoundTag(tag_name='dp4', children=[
                 ByteArrayTag(tag_name='sub_dp', children=[
                     ByteTag(10),
-                    ByteTag(20) 
+                    ByteTag(20)
                 ])
             ])
         ])

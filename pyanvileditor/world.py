@@ -1,9 +1,9 @@
 import sys, math, gzip, zlib, time, os
 from pathlib import Path
-import pyanvil.nbt as nbt
-import pyanvil.stream as stream
-from pyanvil.biomes import Biome
-from pyanvil.canvas import Canvas
+import pyanvileditor.nbt as nbt
+import pyanvileditor.stream as stream
+from pyanvileditor.biomes import Biome
+from pyanvileditor.canvas import Canvas
 
 class BlockState:
     def __init__(self, name, props):
@@ -67,7 +67,7 @@ class ChunkSection:
             new_palette = self._serialize_palette()
             serial_section.add_child(new_palette)
             serial_section.add_child(self._serialize_blockstates(mat_id_mapping))
-        
+
         if not serial_section.has('SkyLight'):
             serial_section.add_child(nbt.ByteArrayTag(tag_name='SkyLight', children=[nbt.ByteTag(-1, tag_name='None') for i in range(2048)]))
 
@@ -88,7 +88,7 @@ class ChunkSection:
                     serial_props.add_child(nbt.StringTag(str(val), tag_name=name))
                 palette_item.add_child(serial_props)
             serial_palette.add_child(palette_item)
-        
+
         return serial_palette
 
     def _serialize_blockstates(self, state_mapping):
@@ -116,7 +116,7 @@ class Chunk:
         self.raw_nbt = raw_nbt
         self.biomes = [Biome.from_index(i) for i in self.raw_nbt.get('Level').get('Biomes').get()]
         self.orig_size = orig_size
-        
+
     def get_block(self, block_pos):
         return self.get_section(block_pos[1]).get_block([n % 16 for n in block_pos])
 
@@ -139,12 +139,12 @@ class Chunk:
                     for z1 in range(16):
                         if string in section.get_block((x1, y1, z1))._state.name:
                             results.append((
-                                (x1 + self.xpos * 16, y1 + sec * 16, z1 + self.zpos * 16), 
+                                (x1 + self.xpos * 16, y1 + sec * 16, z1 + self.zpos * 16),
                                 section.get_block((x1, y1, z1))
                             ))
         return results
 
-    # Blockstates are packed based on the number of values in the pallet. 
+    # Blockstates are packed based on the number of values in the pallet.
     # This selects the pack size, then splits out the ids
     def unpack(raw_nbt):
         sections = {}
@@ -159,7 +159,7 @@ class Chunk:
                 # Sections which contain only air have no states.
                 states = []
             if section.has('Palette'):
-                palette = [ 
+                palette = [
                     BlockState(
                         state.get('Name').get(),
                         state.get('Properties').to_dict() if state.has('Properties') else {}
@@ -243,7 +243,7 @@ class World:
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, typ, val, trace):
         if typ is None:
             self.close()
@@ -264,7 +264,7 @@ class World:
             with open(self.world_folder / 'region' / region_name, mode='r+b') as region:
                 region.seek(0)
                 locations = [[
-                            int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096, 
+                            int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096,
                             int.from_bytes(region.read(1), byteorder='big', signed=False) * 4096
                         ] for i in range(1024) ]
 
@@ -345,7 +345,7 @@ class World:
     def _load_chunk(self, chunk_pos):
         with open(self.world_folder / 'region' / self._get_region_file(chunk_pos), mode='rb') as region:
             locations = [[
-                        int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096, 
+                        int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096,
                         int.from_bytes(region.read(1), byteorder='big', signed=False) * 4096
                     ] for i in range(1024) ]
 

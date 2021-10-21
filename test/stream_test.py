@@ -1,4 +1,4 @@
-from pyanvil.stream import InputStream, OutputStream
+from pyanvileditor.stream import InputStream, OutputStream
 
 class TestInputStream:
 

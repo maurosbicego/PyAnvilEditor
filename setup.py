@@ -8,7 +8,7 @@ setup(
   author = 'Donovan Allen, Mauro Sbicego',
   author_email = 'mauro@sbicego.ch',
   url = 'https://github.com/maurosbicego/PyAnvilEditor',
-  download_url = 'https://github.com/maurosbicego/PyAnvilEditor/archive/v_01.tar.gz',
+  download_url = 'https://github.com/maurosbicego/PyAnvilEditor/archive/refs/tags/v0.1.tar.gz',
   keywords = ['minecraft', 'anvil', 'editor'],
   install_requires=[],
   classifiers=[

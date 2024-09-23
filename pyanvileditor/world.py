@@ -231,7 +231,7 @@ class Chunk:
         return f'Chunk({str(self.xpos)},{str(self.zpos)})'
 
 class World:
-    def __init__(self, world_folder, save_location=None, debug=False, read=True, write=True):
+    def __init__(self, world_folder, save_location=None, debug=False, read=True, write=True, dimension=0):
         self.debug = debug
         if save_location is not None:
             self.world_folder = Path(save_location) / world_folder
@@ -239,6 +239,12 @@ class World:
             self.world_folder = Path(world_folder)
         if not self.world_folder.is_dir():
             raise FileNotFoundError(f'No such folder \"{self.world_folder}\"')
+        if dimension == 0:
+            self.dimension_folder = self.world_folder
+        elif dimension == 1:
+            self.dimension_folder = self.world_folder / "DIM-1"
+        elif dimension == 2:
+            self.dimension_folder = self.world_folder / "DIM1"
         self.chunks = {}
 
     def __enter__(self):
@@ -261,7 +267,7 @@ class World:
             chunks_by_region[region].append(chunk)
 
         for region_name, chunks in chunks_by_region.items():
-            with open(self.world_folder / 'region' / region_name, mode='r+b') as region:
+            with open(self.dimension_folder / 'region' / region_name, mode='r+b') as region:
                 region.seek(0)
                 locations = [[
                             int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096,
@@ -343,7 +349,7 @@ class World:
         return Canvas(self)
 
     def _load_chunk(self, chunk_pos):
-        with open(self.world_folder / 'region' / self._get_region_file(chunk_pos), mode='rb') as region:
+        with open(self.dimension_folder / 'region' / self._get_region_file(chunk_pos), mode='rb') as region:
             locations = [[
                         int.from_bytes(region.read(3), byteorder='big', signed=False) * 4096,
                         int.from_bytes(region.read(1), byteorder='big', signed=False) * 4096
